@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class temp {
+public class DamasInglesasjava {
 
     String[][] tablero = new String[8][8]; // x/X = negras, o/O = blancas
 
-    // Copia profunda del tablero para no modificar jugadas pasadas en el historial
+    
     public static String[][] copiarTablero(String[][] original) {
         String[][] copia = new String[8][8];
         for (int i = 0; i < 8; i++) {
@@ -24,14 +24,13 @@ public class temp {
         int[][] dirs;
         if (p.equals("x")) dirs = new int[][]{{1, -1}, {1, 1}};
         else if (p.equals("o")) dirs = new int[][]{{-1, -1}, {-1, 1}};
-        else dirs = new int[][]{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}; // 'X' o 'O'
+        else dirs = new int[][]{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}; 
 
         for (int[] d : dirs) {
             int mf = f + d[0], mc = c + d[1];
             int df = f + d[0] * 2, dc = c + d[1] * 2;
             if (df >= 0 && df < 8 && dc >= 0 && dc < 8) {
-                boolean esEnemigo = (p.equalsIgnoreCase("x") && t[mf][mc].equalsIgnoreCase("o")) ||
-                                   (p.equalsIgnoreCase("o") && t[mf][mc].equalsIgnoreCase("x"));
+                boolean esEnemigo = (p.equalsIgnoreCase("x") && t[mf][mc].equalsIgnoreCase("o")) || (p.equalsIgnoreCase("o") && t[mf][mc].equalsIgnoreCase("x"));
                 if (esEnemigo && t[df][dc].equals(" ")) return true;
             }
         }
@@ -157,13 +156,41 @@ public class temp {
             }
         }
     }    
+    public static final String colRojo = "\u001B[31m";
+    public static final String colAmarillo = "\u001B[33m";
+    public static final String colNegro = "\u001B[30m";
+    public static final String colRESET = "\u001B[0m";
+    public static final String colVerde = "\u001B[32m";
 
     public static void printTablero(String[][] tablero) {
+        
         System.out.println("< >  <1>  <2>  <3>  <4>  <5>  <6>  <7>  <8>");
         for (int i = 0; i < tablero.length; i++) {
             System.out.print("<" + (i + 1) + "> ");
             for(int j = 0; j < tablero[i].length; j++){
-                System.out.print( " [" + tablero[i][j] + "] ");
+                if((i + j) % 2 == 1){
+                    if(tablero[i][j].equals("x") || tablero[i][j].equals("X")){
+                        System.out.print(colVerde + " [" + colRojo + tablero[i][j] + colVerde + "] " + colRESET);
+                    }
+                    else if(tablero[i][j].equals("o") || tablero[i][j].equals("O")){
+                        System.out.print(colVerde + " [" + colAmarillo + tablero[i][j] + colVerde + "] " + colRESET);
+                    }
+                    else{
+                        System.out.print(colVerde + " [" + colNegro + tablero[i][j] + colVerde + "] " + colRESET);
+                    }
+                }
+                else{
+                    if(tablero[i][j].equals("x") || tablero[i][j].equals("X")){
+                        System.out.print(colNegro + " [" + colRojo + tablero[i][j] + colNegro + "] " + colRESET);
+                    }
+                    else if(tablero[i][j].equals("o") || tablero[i][j].equals("O")){
+                        System.out.print(colNegro + " [" + colAmarillo + tablero[i][j] + colNegro + "] " + colRESET);
+                    }
+                    else{
+                        System.out.print(colNegro + " [" + colNegro + tablero[i][j] + colNegro + "] " + colRESET);
+                    }
+                }
+                
             }
             System.out.println();
         }
@@ -661,7 +688,7 @@ public class temp {
         }
     }
 
-    // Método para reproducir la partida guardada
+    
     public static void reproducirPartida(List<String[][]> historial, Scanner scanner) {
         System.out.println("\n--- REPRODUCCIÓN DE LA PARTIDA ---");
         for (int i = 0; i < historial.size(); i++) {
@@ -703,7 +730,7 @@ public class temp {
                 turno = movFicha(tablero, turno, false, "", o, x, scanner);
             }
         
-            // Guardar el estado tras realizar el movimiento validado
+            
             historial.add(copiarTablero(tablero));
             
             o = contarFichas(tablero, "o", "O");
@@ -718,7 +745,6 @@ public class temp {
             System.out.println("Las o/O GANAN!!!");
         }
 
-        // Ofrecer la opción de reproducir la partida
         System.out.println("\n¿Deseas reproducir la partida jugada? (s/n): ");
         scanner.nextLine(); // Limpiar salto de línea previo
         String respuesta = scanner.nextLine();
